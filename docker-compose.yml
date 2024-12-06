@@ -1,0 +1,45 @@
+version: "3.8"
+services:
+  db:
+    image: mysql:9.0.1
+    volumes:
+      - db_data:/var/lib/mysql
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: SleepTrack
+    ports:
+      - "3306:3306"
+    healthcheck:
+      test: ["CMD", "bash", "-c", "mysqladmin ping -h localhost"]
+      interval: 10s
+      retries: 5
+      timeout: 5s
+    networks:
+      - app-network
+  web:
+    build: .
+    command: bash -c "rm -f tmp/pids/server.pid && bundle exec rails s -b '0.0.0.0'"
+    volumes:
+      - ".:/rails"
+    ports:
+      - "3000:3000"
+    depends_on:
+      db:
+        condition: service_healthy
+    environment:
+      DATABASE_HOST: db
+      DATABASE_NAME: SleepTrack
+      DATABASE_USER: root
+      DATABASE_PASSWORD: root
+    networks:
+      - app-network
+    stdin_open: true
+    tty: true
+
+volumes:
+  db_data:
+    driver: local
+
+networks:
+  app-network:
+    driver: bridge
