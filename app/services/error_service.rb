@@ -9,6 +9,6 @@ class ErrorService < StandardError
   private
 
   def format_errors(errors)
-    errors.map { |field, messages| "#{field}: #{messages.join(', ')}" }.join('; ')
+    errors.map { |field, messages| "#{field}: #{messages.join(', ')}" }.join("; ")
   end
 end
