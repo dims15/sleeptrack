@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2024_12_07_111538) do
+ActiveRecord::Schema[8.0].define(version: 2024_12_08_065353) do
   create_table "follows", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
     t.datetime "deleted_at"
     t.datetime "created_at", null: false
@@ -23,12 +23,13 @@ ActiveRecord::Schema[8.0].define(version: 2024_12_07_111538) do
   end
 
   create_table "sleep_records", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
-    t.datetime "sleep_time"
+    t.datetime "sleep_time", null: false
     t.datetime "wake_time"
     t.datetime "deleted_at"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.bigint "user_id", null: false
+    t.integer "duration"
     t.index ["sleep_time", "wake_time"], name: "index_unique_sleep_and_wake_times", unique: true
     t.index ["user_id"], name: "index_sleep_records_on_user_id"
   end

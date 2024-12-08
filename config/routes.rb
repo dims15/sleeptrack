@@ -17,6 +17,8 @@ Rails.application.routes.draw do
       post "/users", to: "users#create"
       post "/follow", to: "users#follow"
       patch "/unfollow", to: "users#unfollow"
+
+      post "/sleep-track", to: "sleep_track#create"
     end
   end
 end
