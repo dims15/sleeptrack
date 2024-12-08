@@ -11,6 +11,8 @@ module Users
     def execute
       validate_params!
 
+      raise ErrorService.new(@errors) if @errors.any?
+
       if any_record_deleted?
         follow = update_record
       else
@@ -24,7 +26,7 @@ module Users
       follow
 
     rescue ActiveRecord::RecordNotUnique => e
-      add_unique_error(@errors, follow, e)
+      add_rescue_error(errors, :base, "A record with this value already exists")
     end
 
     private
@@ -38,7 +40,7 @@ module Users
       follow
     end
 
-    def update record
+    def update(record)
       @deleted_record.update(deleted_at: nil)
 
       @deleted_record
@@ -55,8 +57,6 @@ module Users
     def validate_params!
       ValidationErrorHelper.add_error(@errors, :user_id, "Can't be blank") if @user_id.blank?
       ValidationErrorHelper.add_error(@errors, :target_user_id, "Can't be blank") if @target_user_id.blank?
-
-      raise ErrorService.new(@errors) if @errors.any?
     end
   end
 end

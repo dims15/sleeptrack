@@ -9,8 +9,15 @@ module Api
       end
 
       def follow
-        follow = Users::FollowService.new(follow_params).execute
-        render json: { message: "User followed", follow: follow }, status: :created
+        follow = Users::FollowService.new(follow_unfollow_params).execute
+        render json: { message: "User followed", follow: follow }, status: :ok
+      rescue ErrorService => e
+        render json: { errors: e.errors }, status: :unprocessable_entity
+      end
+
+      def unfollow
+        unfollow = Users::UnfollowService.new(follow_unfollow_params).execute
+        render json: { message: "User unfollowed", unfollow: unfollow }, status: :ok
       rescue ErrorService => e
         render json: { errors: e.errors }, status: :unprocessable_entity
       end
@@ -19,7 +26,7 @@ module Api
         params.require(:user).permit(:name)
       end
 
-      def follow_params
+      def follow_unfollow_params
         params.permit(:user_id, :target_user_id)
       end
     end

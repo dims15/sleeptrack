@@ -16,6 +16,7 @@ Rails.application.routes.draw do
     namespace :v1 do
       post "/users", to: "users#create"
       post "/follow", to: "users#follow"
+      patch "/unfollow", to: "users#unfollow"
     end
   end
 end
