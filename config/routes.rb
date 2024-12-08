@@ -20,6 +20,7 @@ Rails.application.routes.draw do
 
       post "/sleep-track", to: "sleep_track#create"
       patch "/sleep-track/:id", to: "sleep_track#update"
+      get "/sleep-track", to: "sleep_track#index"
     end
   end
 end

@@ -15,6 +15,21 @@ module Api
         render json: { errors: e.errors }, status: :unprocessable_entity
       end
 
+      def index
+        selected_user = User.find_by_id(params[:id])
+        following_users = selected_user.following.where(follows: { deleted_at: nil })
+        sleep_records = SleepRecord.where(user: following_users.map(&:following_user))
+                           .where(deleted_at: nil)
+                           .where.not(sleep_records: { duration: nil })
+                           .where("DATE(sleep_time) >= ?", params[:start_date])
+                           .where("DATE(sleep_time) <= ?", params[:end_date])
+                           .order(duration: params[:sort])
+    
+        render json: sleep_records, each_serializer: SleepRecordSerializer
+      end
+
+      private
+
       def sleep_track_params
         params.require(:sleep_track).permit(:sleep_time, :wake_time, :user_id)
       end
