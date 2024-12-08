@@ -11,10 +11,11 @@ module Users
     def execute
       validate_params!
 
-      follow = Follow.create(
-        user_id: @user_id,
-        following_user_id: @target_user_id
-      )
+      if any_record_deleted?
+        follow = update_record
+      else
+        follow = create_record
+      end
 
       unless follow.persisted?
         raise ErrorService.new(follow.errors.messages)
@@ -27,6 +28,29 @@ module Users
     end
 
     private
+
+    def create_record
+      follow = Follow.create(
+        user_id: @user_id,
+        following_user_id: @target_user_id
+      )
+
+      follow
+    end
+
+    def update record
+      @deleted_record.update(deleted_at: nil)
+
+      @deleted_record
+    end
+
+    def any_record_deleted?
+      @deleted_record = Follow.where(user_id: @user_id, following_user_id: @target_user_id)
+      .where.not(deleted_at: nil)
+      .take
+
+      @deleted_record.present?
+    end
 
     def validate_params!
       ValidationErrorHelper.add_error(@errors, :user_id, "Can't be blank") if @user_id.blank?
