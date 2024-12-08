@@ -27,7 +27,11 @@ class SleepRecord < ApplicationRecord
   end
 
   def unique_sleep_and_wake_times
-    existing_record = SleepRecord.where(sleep_time: sleep_time, wake_time: wake_time).where(user_id: user_id).exists?
+    existing_record = SleepRecord.where(
+      sleep_time: sleep_time, 
+      wake_time: wake_time,
+      user_id: user_id)
+      .where.not(id: id).exists?
     if existing_record
       errors.add(:base, "The combination of sleep_time and wake_time must be unique")
     end
