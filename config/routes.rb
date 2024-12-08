@@ -19,6 +19,7 @@ Rails.application.routes.draw do
       patch "/unfollow", to: "users#unfollow"
 
       post "/sleep-track", to: "sleep_track#create"
+      patch "/sleep-track/:id", to: "sleep_track#update"
     end
   end
 end
