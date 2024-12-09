@@ -1,6 +1,5 @@
 module SleepTrack
   class UpdateService
-    include ErrorHandlingHelper
     include ModelValidationHelper
 
     def initialize(id, params)

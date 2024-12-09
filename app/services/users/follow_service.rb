@@ -23,7 +23,7 @@ module Users
 
     rescue ActiveRecord::RecordNotUnique => e
       ValidationErrorHelper.add_error(@errors, :base, "User already following this account")
-      raise ValidationError.new(errors)
+      raise ValidationError.new(@errors)
     end
 
     private

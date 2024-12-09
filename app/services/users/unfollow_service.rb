@@ -33,7 +33,7 @@ module Users
 
     rescue ActiveRecord::RecordNotFound => e
       ValidationErrorHelper.add_error(@errors, :base, "User id #{@user_id} is not follow user id #{@target_user_id}.")
-      raise ValidationError.new(errors)
+      raise ValidationError.new(@errors)
     end
 
     def validate_params
