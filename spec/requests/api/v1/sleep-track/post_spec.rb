@@ -16,12 +16,12 @@ RSpec.describe "Api::V1::SleepTrack", type: :request do
     context "with valid parameters" do
       it "creates a new sleep track record and returns 201 status" do
         post "/api/v1/sleep-track", params: valid_params
-    
+
         expect(response).to have_http_status(:created)
         json_response = JSON.parse(response.body, symbolize_names: true)
         expect(json_response[:message]).to eq("Sleep track record created successfully")
         expect(json_response[:sleep_track][:user_id]).to eq(user.id)
-        
+
         sleep_time_response = Time.iso8601(json_response[:sleep_track][:sleep_time])
         wake_time_response = Time.iso8601(json_response[:sleep_track][:wake_time])
 
@@ -60,14 +60,14 @@ RSpec.describe "Api::V1::SleepTrack", type: :request do
         it "creates a new sleep track record and returns 201 status" do
           invalid_params = valid_params.deep_dup
           invalid_params[:sleep_track].delete(:wake_time)
-  
+
           post "/api/v1/sleep-track", params: invalid_params
-  
+
           expect(response).to have_http_status(:created)
           json_response = JSON.parse(response.body, symbolize_names: true)
           expect(json_response[:message]).to eq("Sleep track record created successfully")
           expect(json_response[:sleep_track][:user_id]).to eq(user.id)
-          
+
           sleep_time_response = Time.iso8601(json_response[:sleep_track][:sleep_time])
 
           sleep_time_expected = Time.iso8601(valid_params[:sleep_track][:sleep_time])
