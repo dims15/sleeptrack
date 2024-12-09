@@ -1,6 +1,5 @@
 module Users
   class FollowService
-    include ErrorHandlingHelper
     include ModelValidationHelper
 
     def initialize(params)
@@ -23,7 +22,8 @@ module Users
       @follow
 
     rescue ActiveRecord::RecordNotUnique => e
-      add_rescue_error(@errors, "User already following this account")
+      ValidationErrorHelper.add_error(@errors, :base, "User already following this account")
+      raise ValidationError.new(errors)
     end
 
     private

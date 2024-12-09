@@ -1,6 +1,5 @@
 module Users
   class UnfollowService
-    include ErrorHandlingHelper
     include ModelValidationHelper
 
     def initialize(params)
@@ -33,7 +32,8 @@ module Users
         deleted_at: nil)
 
     rescue ActiveRecord::RecordNotFound => e
-      add_rescue_error(@errors, "User id #{@user_id} is not follow user id #{@target_user_id}.")
+      ValidationErrorHelper.add_error(@errors, :base, "User id #{@user_id} is not follow user id #{@target_user_id}.")
+      raise ValidationError.new(errors)
     end
 
     def validate_params
