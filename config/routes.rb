@@ -16,7 +16,7 @@ Rails.application.routes.draw do
     namespace :v1 do
       post "/users", to: "users#create"
       post "/follow", to: "users#follow"
-      patch "/unfollow", to: "users#unfollow"
+      delete "/unfollow", to: "users#unfollow"
 
       post "/sleep-track", to: "sleep_track#create"
       patch "/sleep-track/:id", to: "sleep_track#update"
