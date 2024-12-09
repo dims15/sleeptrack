@@ -1,15 +1,17 @@
 module Users
   class FollowService
-  include ErrorHandlingHelper
+    include ErrorHandlingHelper
+    include ModelValidationHelper
 
     def initialize(params)
+      @params = params
       @user_id = params[:user_id]
-      @target_user_id = params[:target_user_id]
+      @target_user_id = params[:following_user_id]
       @errors = {}
     end
 
     def execute
-      validate_params!
+      validate_params
 
       raise ValidationError.new(@errors) if @errors.any?
 
@@ -17,16 +19,11 @@ module Users
         return update_record
       end
 
-      follow = create_record
-
-      unless follow.persisted?
-        raise ValidationError.new(follow.errors.messages)
-      end
-
-      follow
+      @follow.save!
+      @follow
 
     rescue ActiveRecord::RecordNotUnique => e
-      add_rescue_error(errors, :base, "A record with this value already exists")
+      add_rescue_error(@errors, "User already following this account")
     end
 
     private
@@ -54,9 +51,10 @@ module Users
       @deleted_record.present?
     end
 
-    def validate_params!
-      ValidationErrorHelper.add_error(@errors, :user_id, "Can't be blank") if @user_id.blank?
-      ValidationErrorHelper.add_error(@errors, :target_user_id, "Can't be blank") if @target_user_id.blank?
+    def validate_params
+      @follow = Follow.new(@params)
+
+      validate_model(@follow)
     end
   end
 end
