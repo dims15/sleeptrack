@@ -11,6 +11,11 @@ module Api
         render json: { message: "Sleep track record updated successfully", sleep_track: sleep_track }, status: :ok
       end
 
+      def delete
+        SleepTrack::DeleteService.new(id: params[:id]).execute
+        render json: { message: "Sleep track record deleted successfully" }, status: :ok
+      end
+
       def index
         selected_user = User.find_by_id(params[:id])
         following_users = selected_user.following.where(follows: { deleted_at: nil })
