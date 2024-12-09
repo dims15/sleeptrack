@@ -1,21 +1,24 @@
 module Users
   class UnfollowService
     include ErrorHandlingHelper
+    include ModelValidationHelper
 
     def initialize(params)
+      @params = params
       @user_id = params[:user_id]
-      @target_user_id = params[:target_user_id]
+      @target_user_id = params[:following_user_id]
       @errors = {}
     end
 
     def execute
-      validate_params!
+      validate_params
+
       check_user_follow_exist
 
       raise ValidationError.new(@errors) if @errors.any?
 
       unless @following_record.update(deleted_at: Time.current)
-        raise ValidationError.new(unfollow.errors.messages)
+        raise ValidationError.new(@following_record.errors.messages)
       end
 
       @following_record
@@ -33,9 +36,12 @@ module Users
       add_rescue_error(@errors, "User id #{@user_id} is not follow user id #{@target_user_id}.")
     end
 
-    def validate_params!
-      ValidationErrorHelper.add_error(@errors, :user_id, "Can't be blank") if @user_id.blank?
-      ValidationErrorHelper.add_error(@errors, :target_user_id, "Can't be blank") if @target_user_id.blank?
+    def validate_params
+      @follow = Follow.new(@params)
+
+      validate_model(@follow)
+
+      raise ValidationError.new(@errors) if @errors.any?
     end
   end
 end
