@@ -1,6 +1,7 @@
 module SleepTrack
   class UpdateService
     include ErrorHandlingHelper
+    include ModelValidationHelper
 
     def initialize(id, params)
       @id = id
@@ -13,11 +14,11 @@ module SleepTrack
 
       @sleep_record.assign_attributes(@params)
 
-      update
+      validate_model(@sleep_record)
 
-      if @errors.any?
-        raise ValidationError.new(@errors)
-      end
+      raise ValidationError.new(@errors) if @errors.any?
+
+      @sleep_record.update(@params)
 
       @sleep_record
     end
@@ -30,16 +31,6 @@ module SleepTrack
     rescue ActiveRecord::RecordNotFound => e
       add_rescue_error(@errors, "Record not found.")
       raise ValidationError.new(@errors)
-    end
-
-    def update
-      if @sleep_record.valid?
-        @sleep_record.update(@params)
-      else
-        @sleep_record.errors.each do |field, message|
-          ValidationErrorHelper.add_error(@errors, field.attribute, field.type)
-        end
-      end
     end
   end
 end
