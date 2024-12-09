@@ -34,7 +34,7 @@ RSpec.describe SleepTrack::UpdateService, type: :service do
       it "raises a ValidationError with a record not found message" do
         service = SleepTrack::UpdateService.new(9999, valid_params)
 
-        expect { service.execute }.to raise_error(ValidationError, /Record not found/)
+        expect { service.execute }.to raise_error(NotFoundError)
       end
     end
 

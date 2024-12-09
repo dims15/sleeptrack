@@ -29,8 +29,7 @@ module SleepTrack
       @sleep_record = SleepRecord.find_by!(id: @id, deleted_at: nil)
 
     rescue ActiveRecord::RecordNotFound => e
-      add_rescue_error(@errors, "Record not found.")
-      raise ValidationError.new(@errors)
+      raise NotFoundError.new(e)
     end
   end
 end

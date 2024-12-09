@@ -3,6 +3,7 @@ class ApiController < ActionController::Base
   skip_before_action :verify_authenticity_token
   rescue_from ActionController::ParameterMissing, with: :handle_parameter_missing
   rescue_from ValidationError, with: :handle_validation_error
+  rescue_from NotFoundError, with: :handle_not_found_error
 
   private
 
@@ -12,5 +13,9 @@ class ApiController < ActionController::Base
 
   def handle_validation_error(e)
     render json: { message: "Validation failed", errors: e.errors }, status: :unprocessable_entity
+  end
+
+  def handle_not_found_error(e)
+    render json: { message: "Record not found" }, status: :not_found
   end
 end
