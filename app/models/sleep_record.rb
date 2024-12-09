@@ -28,7 +28,7 @@ class SleepRecord < ApplicationRecord
 
   def unique_sleep_and_wake_times
     existing_record = SleepRecord.where(
-      sleep_time: sleep_time, 
+      sleep_time: sleep_time,
       wake_time: wake_time,
       user_id: user_id)
       .where.not(id: id).exists?

@@ -7,5 +7,5 @@ class SleepRecordSerializer < ActiveModel::Serializer
     object.user.name
   end
 end
-end
+  end
 end

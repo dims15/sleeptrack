@@ -1,4 +1,3 @@
-# spec/requests/api/v1/users_spec.rb
 require 'rails_helper'
 
 RSpec.describe "Api::V1::Users", type: :request do
