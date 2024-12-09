@@ -26,7 +26,7 @@ RSpec.describe "Api::V1::Users", type: :request do
 
         json_response = JSON.parse(response.body)
         expect(json_response['message']).to eq("Validation failed")
-        expect(json_response['errors']['name']).to include("Can't be blank")
+        expect(json_response['errors']['name']).to include("can't be blank")
       end
     end
   end

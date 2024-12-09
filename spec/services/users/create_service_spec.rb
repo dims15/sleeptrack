@@ -23,7 +23,7 @@ RSpec.describe Users::CreateService, type: :service do
 
         expect { service.execute }.to raise_error(ValidationError) do |error|
           expect(error.errors).to have_key(:name)
-          expect(error.errors[:name]).to include(:blank)
+          expect(error.errors[:name]).to include("can't be blank")
         end
       end
     end
