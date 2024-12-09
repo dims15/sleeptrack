@@ -42,7 +42,7 @@ gem "thruster", require: false
 
 gem "mysql2", ">= 0.5.3"
 
-gem 'active_model_serializers'
+gem "active_model_serializers"
 
 group :development, :test do
   # See https://guides.rubyonrails.org/debugging_rails_applications.html#debugging-with-the-debug-gem
@@ -57,6 +57,10 @@ group :development, :test do
   gem "byebug"
 
   gem "rubocop", require: false
+
+  gem "rspec-rails", "~> 5.0"
+
+  gem "factory_bot_rails"
 end
 
 group :development do
