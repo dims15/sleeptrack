@@ -11,6 +11,6 @@ class ApiController < ActionController::Base
   end
 
   def handle_validation_error(e)
-    render json: { errors: e.errors }, status: :unprocessable_entity
+    render json: { message: "Validation failed", errors: e.errors }, status: :unprocessable_entity
   end
 end
