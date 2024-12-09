@@ -17,7 +17,7 @@ module SleepTrack
       validate_model
 
       if @errors.any?
-        raise ErrorService.new(@errors)
+        raise ValidationError.new(@errors)
       end
 
       @sleep_record.save!
@@ -28,7 +28,7 @@ module SleepTrack
 
     def any_record_deleted?
       @deleted_record = SleepRecord.where(
-        user_id: @params[:user_id], 
+        user_id: @params[:user_id],
         sleep_time: @params[:sleep_time],
         wake_time: @params[:wake_time])
       .where.not(deleted_at: nil)

@@ -11,16 +11,16 @@ module Users
     def execute
       validate_params!
 
-      raise ErrorService.new(@errors) if @errors.any?
+      raise ValidationError.new(@errors) if @errors.any?
 
       if any_record_deleted?
-        follow = update_record
-      else
-        follow = create_record
+        return update_record
       end
 
+      follow = create_record
+
       unless follow.persisted?
-        raise ErrorService.new(follow.errors.messages)
+        raise ValidationError.new(follow.errors.messages)
       end
 
       follow
@@ -40,7 +40,7 @@ module Users
       follow
     end
 
-    def update(record)
+    def update_record
       @deleted_record.update(deleted_at: nil)
 
       @deleted_record

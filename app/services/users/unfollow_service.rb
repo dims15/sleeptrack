@@ -12,10 +12,10 @@ module Users
       validate_params!
       check_user_follow_exist
 
-      raise ErrorService.new(@errors) if @errors.any?
+      raise ValidationError.new(@errors) if @errors.any?
 
       unless @following_record.update(deleted_at: Time.current)
-        raise ErrorService.new(unfollow.errors.messages)
+        raise ValidationError.new(unfollow.errors.messages)
       end
 
       @following_record

@@ -4,15 +4,11 @@ module Api
       def create
         sleep_track = SleepTrack::CreateService.new(sleep_track_params).execute
         render json: { message: "Sleep track record created successfully", sleep_track: sleep_track }, status: :created
-      rescue ErrorService => e
-        render json: { errors: e.errors }, status: :unprocessable_entity
       end
 
       def update
         sleep_track = SleepTrack::UpdateService.new(params[:id], update_sleep_track_params).execute
         render json: { message: "Sleep track record updated successfully", sleep_track: sleep_track }, status: :ok
-      rescue ErrorService => e
-        render json: { errors: e.errors }, status: :unprocessable_entity
       end
 
       def index
@@ -24,7 +20,7 @@ module Api
                            .where("DATE(sleep_time) >= ?", params[:start_date])
                            .where("DATE(sleep_time) <= ?", params[:end_date])
                            .order(duration: params[:sort])
-    
+
         render json: sleep_records, each_serializer: SleepRecordSerializer
       end
 

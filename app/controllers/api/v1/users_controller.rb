@@ -4,22 +4,16 @@ module Api
       def create
         user = Users::CreateService.new(user_create_params).execute
         render json: { message: "User created successfully", user: user }, status: :created
-      rescue ErrorService => e
-        render json: { errors: e.errors }, status: :unprocessable_entity
       end
 
       def follow
         follow = Users::FollowService.new(follow_unfollow_params).execute
         render json: { message: "User followed", follow: follow }, status: :ok
-      rescue ErrorService => e
-        render json: { errors: e.errors }, status: :unprocessable_entity
       end
 
       def unfollow
         unfollow = Users::UnfollowService.new(follow_unfollow_params).execute
         render json: { message: "User unfollowed", unfollow: unfollow }, status: :ok
-      rescue ErrorService => e
-        render json: { errors: e.errors }, status: :unprocessable_entity
       end
 
       def user_create_params

@@ -11,7 +11,7 @@ module Users
       user = User.create(name: @params[:name])
 
       unless user.persisted?
-        raise ErrorService.new(user.errors.messages)
+        raise ValidationError.new(user.errors.messages)
       end
 
       user
@@ -22,7 +22,7 @@ module Users
     def validate_params!
       ValidationErrorHelper.add_error(@errors, :name, "Can't be blank") if @params[:name].blank?
 
-      raise ErrorService.new(@errors) if @errors.any?
+      raise ValidationError.new(@errors) if @errors.any?
     end
   end
 end

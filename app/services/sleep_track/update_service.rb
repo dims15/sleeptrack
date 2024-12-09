@@ -16,7 +16,7 @@ module SleepTrack
       update
 
       if @errors.any?
-        raise ErrorService.new(@errors)
+        raise ValidationError.new(@errors)
       end
 
       @sleep_record
@@ -29,7 +29,7 @@ module SleepTrack
 
     rescue ActiveRecord::RecordNotFound => e
       add_rescue_error(@errors, "Record not found.")
-      raise ErrorService.new(@errors)
+      raise ValidationError.new(@errors)
     end
 
     def update

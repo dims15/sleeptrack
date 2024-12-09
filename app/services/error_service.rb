@@ -12,3 +12,9 @@ class ErrorService < StandardError
     errors.map { |field, messages| "#{field}: #{messages.join(', ')}" }.join("; ")
   end
 end
+
+class ValidationError < ErrorService
+  def initialize(errors)
+    super(errors)
+  end
+end
