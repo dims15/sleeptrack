@@ -1,28 +1,23 @@
 module Users
   class CreateService
+    include ModelValidationHelper
+
     def initialize(params)
       @params = params
       @errors = {}
     end
 
     def execute
-      validate_params!
+      user = User.new(@params)
 
-      user = User.create(name: @params[:name])
+      validate_model(user)
 
-      unless user.persisted?
-        raise ValidationError.new(user.errors.messages)
+      if @errors.any?
+        raise ValidationError.new(@errors)
       end
 
+      user.save!
       user
-    end
-
-    private
-
-    def validate_params!
-      ValidationErrorHelper.add_error(@errors, :name, "Can't be blank") if @params[:name].blank?
-
-      raise ValidationError.new(@errors) if @errors.any?
     end
   end
 end

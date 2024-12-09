@@ -1,4 +1,4 @@
-class ErrorService < StandardError
+class FormattedError < StandardError
   attr_reader :errors
 
   def initialize(errors)
@@ -10,11 +10,5 @@ class ErrorService < StandardError
 
   def format_errors(errors)
     errors.map { |field, messages| "#{field}: #{messages.join(', ')}" }.join("; ")
-  end
-end
-
-class ValidationError < ErrorService
-  def initialize(errors)
-    super(errors)
   end
 end
