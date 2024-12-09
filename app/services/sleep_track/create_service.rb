@@ -1,6 +1,7 @@
 module SleepTrack
   class CreateService
     include ErrorHandlingHelper
+    include ModelValidationHelper
 
     def initialize(params)
       @params = params
@@ -14,11 +15,9 @@ module SleepTrack
 
       @sleep_record = SleepRecord.new(@params)
 
-      validate_model
+      validate_model(@sleep_record)
 
-      if @errors.any?
-        raise ValidationError.new(@errors)
-      end
+      raise ValidationError.new(@errors) if @errors.any?
 
       @sleep_record.save!
       @sleep_record
@@ -34,14 +33,6 @@ module SleepTrack
       .where.not(deleted_at: nil)
       .take
       @deleted_record.present?
-    end
-
-    def validate_model
-      unless @sleep_record.valid?
-        @sleep_record.errors.each do |field, message|
-          ValidationErrorHelper.add_error(@errors, field.attribute, field.type)
-        end
-      end
     end
 
     def update_record
