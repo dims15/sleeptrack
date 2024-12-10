@@ -17,6 +17,7 @@ Rails.application.routes.draw do
       post "/users", to: "users#create"
       post "/follow", to: "users#follow"
       delete "/unfollow", to: "users#unfollow"
+      get "/users/:id/clock_in", to: "users#retrieve_clock_in"
 
       post "/sleep-track", to: "sleep_track#create"
       patch "/sleep-track/:id", to: "sleep_track#update"

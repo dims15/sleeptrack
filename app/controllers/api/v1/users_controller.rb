@@ -16,6 +16,13 @@ module Api
         render json: { message: "User unfollowed", unfollow: unfollow }, status: :ok
       end
 
+      def retrieve_clock_in
+        clock_in_records = Users::RetrieveClockInService.new(params).execute
+        render json: clock_in_records, each_serializer: ClockInSerializer
+      end
+
+      private
+
       def user_create_params
         params.require(:user).permit(:name)
       end
