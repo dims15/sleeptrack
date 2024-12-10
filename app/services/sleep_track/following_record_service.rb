@@ -24,7 +24,7 @@ module SleepTrack
                          .where(deleted_at: nil)
                          .where.not(sleep_records: { duration: nil })
                          .where("DATE(sleep_time) >= ?", @params[:start_date])
-                         .where("DATE(sleep_time) <= ?", @params[:end_date])
+                         .where("DATE(sleep_time) < ?", @params[:end_date])
                          .order(duration: @params[:sort_order])
 
       sleep_records
@@ -53,10 +53,10 @@ module SleepTrack
 
     def set_default_dates
       unless @params[:start_date].present? && @params[:end_date].present?
-        last_week = (Date.today.beginning_of_week(:sunday) - 1.week)..(Date.today.beginning_of_week(:sunday) - 1.day)
+        last_week = (Date.today.beginning_of_week(:sunday) - 1.week)..(Date.today.beginning_of_week(:sunday))
 
-        @params[:start_date] ||= last_week.begin
-        @params[:end_date] ||= last_week.end
+        @params[:start_date] ||= last_week.begin.strftime("%Y-%m-%d")
+        @params[:end_date] ||= last_week.end.strftime("%Y-%m-%d")
       end
     end
   end
