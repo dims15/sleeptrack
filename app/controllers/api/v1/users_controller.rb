@@ -18,7 +18,13 @@ module Api
 
       def retrieve_clock_in
         clock_in_records = Users::RetrieveClockInService.new(params).execute
-        render json: clock_in_records, each_serializer: ClockInSerializer
+
+        @pagy, @clock_in_records = pagy(clock_in_records)
+
+        render json: {
+          clock_in_records: @clock_in_records,
+          meta: pagination_metadata(@pagy)
+        }, each_serializer: ClockInSerializer
       end
 
       private

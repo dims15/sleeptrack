@@ -14,25 +14,37 @@ RSpec.describe "Api::V1::Users", type: :request do
         get "/api/v1/users/#{user.id}/clock_in", headers: headers
 
         expect(response).to have_http_status(:ok)
-        expect(json_body.size).to eq(2)
-        expect(json_body[0]["id"]).to eq(sleep_record2.id)
-        expect(json_body[1]["id"]).to eq(sleep_record1.id)
+        expect(json_body['clock_in_records'].size).to eq(2)
+        expect(json_body['clock_in_records'][0]["id"]).to eq(sleep_record2.id)
+        expect(json_body['clock_in_records'][1]["id"]).to eq(sleep_record1.id)
       end
 
       it "returns clock-in records in ascending order when specified" do
         get "/api/v1/users/#{user.id}/clock_in", params: { sort_order: "asc" }, headers: headers
 
         expect(response).to have_http_status(:ok)
-        expect(json_body.size).to eq(2)
-        expect(json_body[0]["id"]).to eq(sleep_record1.id)
-        expect(json_body[1]["id"]).to eq(sleep_record2.id)
+        expect(json_body['clock_in_records'].size).to eq(2)
+        expect(json_body['clock_in_records'][0]["id"]).to eq(sleep_record1.id)
+        expect(json_body['clock_in_records'][1]["id"]).to eq(sleep_record2.id)
       end
 
       it "does not include deleted records" do
         get "/api/v1/users/#{user.id}/clock_in", headers: headers
 
-        record_ids = json_body.map { |record| record["id"] }
+        record_ids = json_body['clock_in_records'].map { |record| record["id"] }
         expect(record_ids).not_to include(deleted_sleep_record.id)
+      end
+
+      it "contains pagination meta" do
+        get "/api/v1/users/#{user.id}/clock_in", headers: headers
+
+        expect(json_body["meta"]).to include(
+          "current_page" => 1,
+          "next_page" => nil,
+          "prev_page" => nil,
+          "total_pages" => 1,
+          "total_count" => 2
+        )
       end
     end
 
@@ -50,9 +62,9 @@ RSpec.describe "Api::V1::Users", type: :request do
         get "/api/v1/users/#{user.id}/clock_in", params: { sort_order: "invalid" }, headers: headers
 
         expect(response).to have_http_status(:ok)
-        expect(json_body.size).to eq(2)
-        expect(json_body[0]["id"]).to eq(sleep_record2.id)
-        expect(json_body[1]["id"]).to eq(sleep_record1.id)
+        expect(json_body['clock_in_records'].size).to eq(2)
+        expect(json_body['clock_in_records'][0]["id"]).to eq(sleep_record2.id)
+        expect(json_body['clock_in_records'][1]["id"]).to eq(sleep_record1.id)
       end
     end
 
@@ -63,7 +75,7 @@ RSpec.describe "Api::V1::Users", type: :request do
         get "/api/v1/users/#{other_user.id}/clock_in", headers: headers
 
         expect(response).to have_http_status(:ok)
-        expect(json_body).to be_empty
+        expect(json_body['clock_in_records']).to be_empty
       end
     end
   end
