@@ -8,7 +8,7 @@ RSpec.describe 'Api::V1::UsersController', type: :request do
 
     context "when the unfollow request is valid" do
       it "unfollows the user and returns success response" do
-        delete "/api/v1/unfollow", params: { user_id: user.id, following_user_id: following_user.id }
+        delete "/api/v1/users/#{user.id}/unfollow/#{following_user.id}"
 
         expect(response).to have_http_status(:ok)
         expect(response.parsed_body["message"]).to eq("User unfollowed")
@@ -21,7 +21,7 @@ RSpec.describe 'Api::V1::UsersController', type: :request do
       before { follow.update(deleted_at: Time.current) }
 
       it "returns an error response" do
-        delete "/api/v1/unfollow", params: { user_id: user.id, following_user_id: following_user.id }
+        delete "/api/v1/users/#{user.id}/unfollow/#{following_user.id}"
 
         expect(response.status).to eq(422)
         expect(response.parsed_body["errors"]['base']).to include("User id #{user.id} is not follow user id #{following_user.id}.")
@@ -29,19 +29,17 @@ RSpec.describe 'Api::V1::UsersController', type: :request do
     end
 
     context "when the request is invalid" do
-      it "returns an error if user_id is missing" do
-        delete "/api/v1/unfollow", params: { following_user_id: following_user.id }
+      it "returns an error not found if user_id is missing" do
+        delete "/api/v1/users/abc/unfollow/#{following_user.id}"
 
         expect(response.status).to eq(422)
-        expect(response.parsed_body["errors"]['base']).to include("Invalid user follow")
         expect(response.parsed_body["errors"]['user']).to include("must exist")
       end
 
-      it "returns an error if following_user_id is missing" do
-        delete "/api/v1/unfollow", params: { user_id: user.id }
+      it "returns an error not found if following_user_id is missing" do
+        delete "/api/v1/users/#{user.id}/unfollow/abc", params: { user_id: user.id }
 
         expect(response.status).to eq(422)
-        expect(response.parsed_body["errors"]['base']).to include("Invalid user follow")
         expect(response.parsed_body["errors"]['following_user']).to include("must exist")
       end
     end

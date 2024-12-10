@@ -15,9 +15,9 @@ Rails.application.routes.draw do
   namespace :api do
     namespace :v1 do
       post "/users", to: "users#create"
-      post "/follow", to: "users#follow"
-      delete "/unfollow", to: "users#unfollow"
-      get "/users/:id/clock_in", to: "users#retrieve_clock_in"
+      post "/users/:user_id/follow/:following_user_id", to: "users#follow"
+      delete "/users/:user_id/unfollow/:following_user_id", to: "users#unfollow"
+      get "/users/:user_id/clock_in", to: "users#retrieve_clock_in"
 
       post "/sleep-track", to: "sleep_track#create"
       patch "/sleep-track/:id", to: "sleep_track#update"

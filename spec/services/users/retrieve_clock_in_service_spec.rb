@@ -8,7 +8,7 @@ RSpec.describe Users::RetrieveClockInService, type: :service do
 
   describe "#execute" do
     context "when valid parameters are provided" do
-      let(:params) { { id: user.id, sort_order: "asc" } }
+      let(:params) { { user_id: user.id, sort_order: "asc" } }
       let(:service) { described_class.new(params) }
 
       it "returns the user's sleep records in ascending order" do
@@ -20,7 +20,7 @@ RSpec.describe Users::RetrieveClockInService, type: :service do
     end
 
     context "when the user does not exist" do
-      let(:params) { { id: 9999, sort_order: "asc" } }
+      let(:params) { { user_id: 9999, sort_order: "asc" } }
       let(:service) { described_class.new(params) }
 
       it "raises a NotFoundError" do
@@ -29,7 +29,7 @@ RSpec.describe Users::RetrieveClockInService, type: :service do
     end
 
     context "when an invalid sort order is provided" do
-      let(:params) { { id: user.id, sort_order: "invalid" } }
+      let(:params) { { user_id: user.id, sort_order: "invalid" } }
       let(:service) { described_class.new(params) }
 
       it "defaults to descending order" do
@@ -40,7 +40,7 @@ RSpec.describe Users::RetrieveClockInService, type: :service do
     end
 
     context "when no sort order is provided" do
-      let(:params) { { id: user.id } }
+      let(:params) { { user_id: user.id } }
       let(:service) { described_class.new(params) }
 
       it "defaults to descending order" do
@@ -52,7 +52,7 @@ RSpec.describe Users::RetrieveClockInService, type: :service do
 
     context "when the user has no sleep records" do
       let(:other_user) { create(:user) }
-      let(:params) { { id: other_user.id, sort_order: "asc" } }
+      let(:params) { { user_id: other_user.id, sort_order: "asc" } }
       let(:service) { described_class.new(params) }
 
       it "returns an empty ActiveRecord relation" do

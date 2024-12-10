@@ -14,7 +14,7 @@ module Users
     private
 
     def validate_user
-      @user = User.find_by!(id: @params[:id])
+      @user = User.find_by!(id: @params[:user_id])
 
     rescue ActiveRecord::RecordNotFound => e
       raise NotFoundError.new(e)
