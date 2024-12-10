@@ -18,7 +18,7 @@ RSpec.describe SleepTrack::DeleteService, type: :service do
       it "raises a NotFoundError" do
         non_existing_id = 9999
         service = described_class.new(id: non_existing_id)
-        
+
         expect { service.execute }.to raise_error(NotFoundError)
       end
     end
