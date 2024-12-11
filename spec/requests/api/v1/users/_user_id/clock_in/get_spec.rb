@@ -8,7 +8,7 @@ RSpec.describe "Api::V1::Users", type: :request do
 
   let(:headers) { { "Content-Type" => "application/json" } }
 
-  describe "GET /api/v1/users/:id/clock_in" do
+  describe "GET /api/v1/users/:user_id/clock_in" do
     context "when the user exists" do
       it "returns clock-in records in descending order by default" do
         get "/api/v1/users/#{user.id}/clock_in", headers: headers

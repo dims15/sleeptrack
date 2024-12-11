@@ -1,7 +1,7 @@
 require 'rails_helper'
 
 RSpec.describe 'Api::V1::UsersController', type: :request do
-  describe "DELETE /api/v1/unfollow" do
+  describe "DELETE /api/v1/users/:user_id/unfollow/:following_user_id" do
     let(:user) { create(:user) }
     let(:following_user) { create(:user) }
     let!(:follow) { create(:follow, user: user, following_user: following_user, deleted_at: nil) }

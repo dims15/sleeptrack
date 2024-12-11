@@ -4,7 +4,7 @@ RSpec.describe 'Api::V1::UsersController', type: :request do
   let(:user) { create(:user) }
   let(:target_user) { create(:user) }
 
-  describe 'POST /api/v1/follow' do
+  describe 'POST /api/v1/users/:user_id/follow/:following_user_id' do
     context 'when the params are valid' do
       it 'successfully follows the target user' do
         expect {

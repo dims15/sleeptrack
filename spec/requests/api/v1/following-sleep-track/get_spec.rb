@@ -7,7 +7,7 @@ RSpec.describe Api::V1::SleepTrackController, type: :request do
   let!(:sleep_record1) { create(:sleep_record, user: following_user, sleep_time: 2.days.ago, wake_time: 1.day.ago) }
   let!(:sleep_record2) { create(:sleep_record, user: following_user, sleep_time: 1.day.ago, wake_time: Time.current) }
 
-  describe "GET /api/v1/sleep-track" do
+  describe "GET /api/v1/following-sleep-track" do
     let(:valid_params) do
       {
         id: user.id,
@@ -28,6 +28,17 @@ RSpec.describe Api::V1::SleepTrackController, type: :request do
         expect(json['sleep_records'].size).to eq(2)
         expect(json['sleep_records'].first["id"]).to eq(sleep_record1.id)
         expect(json['sleep_records'].last["id"]).to eq(sleep_record2.id)
+      end
+
+      it "contains pagination meta" do
+        json = JSON.parse(response.body)
+        expect(json['meta']).to include(
+          "current_page" => 1,
+          "next_page" => nil,
+          "prev_page" => nil,
+          "total_pages" => 1,
+          "total_count" => 2
+        )
       end
     end
 
