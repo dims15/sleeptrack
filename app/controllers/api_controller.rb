@@ -1,6 +1,6 @@
 class ApiController < ActionController::Base
   include Pagy::Backend
-  
+
   allow_browser versions: :modern
 
   skip_before_action :verify_authenticity_token
