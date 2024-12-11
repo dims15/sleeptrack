@@ -18,21 +18,21 @@ RSpec.describe Api::V1::SleepTrackController, type: :request do
     end
 
     context "when the request is valid" do
-      before { get "/api/v1/sleep-track", params: valid_params }
+      before { get "/api/v1/following-sleep-track", params: valid_params }
 
       it "returns the sleep records of following users" do
         expect(response).to have_http_status(:ok)
 
         json = JSON.parse(response.body)
-        expect(json).to be_an(Array)
-        expect(json.size).to eq(2)
-        expect(json.first["id"]).to eq(sleep_record1.id)
-        expect(json.last["id"]).to eq(sleep_record2.id)
+        expect(json['sleep_records']).to be_an(Array)
+        expect(json['sleep_records'].size).to eq(2)
+        expect(json['sleep_records'].first["id"]).to eq(sleep_record1.id)
+        expect(json['sleep_records'].last["id"]).to eq(sleep_record2.id)
       end
     end
 
     context "when the user does not exist" do
-      before { get "/api/v1/sleep-track", params: valid_params.merge(id: 9999) }
+      before { get "/api/v1/following-sleep-track", params: valid_params.merge(id: 9999) }
 
       it "returns a 404 Not Found status" do
         expect(response).to have_http_status(:not_found)
@@ -43,7 +43,7 @@ RSpec.describe Api::V1::SleepTrackController, type: :request do
     end
 
     context "when the date format is invalid" do
-      before { get "/api/v1/sleep-track", params: valid_params.merge(start_date: "invalid-date") }
+      before { get "/api/v1/following-sleep-track", params: valid_params.merge(start_date: "invalid-date") }
 
       it "returns a 422 Unprocessable Entity status" do
         expect(response.status).to eq(422)
@@ -57,15 +57,15 @@ RSpec.describe Api::V1::SleepTrackController, type: :request do
       before do
         sleep_record1.update(deleted_at: Time.current)
         sleep_record2.update(deleted_at: Time.current)
-        get "/api/v1/sleep-track", params: valid_params
+        get "/api/v1/following-sleep-track", params: valid_params
       end
 
       it "returns an empty array" do
         expect(response).to have_http_status(:ok)
 
         json = JSON.parse(response.body)
-        expect(json).to be_an(Array)
-        expect(json).to be_empty
+        expect(json['sleep_records']).to be_an(Array)
+        expect(json['sleep_records']).to be_empty
       end
     end
   end

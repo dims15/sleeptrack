@@ -19,7 +19,14 @@ module Api
       def index
         sleep_records = SleepTrack::FollowingRecordService.new(params).execute
 
-        render json: sleep_records, each_serializer: SleepRecordSerializer
+        # render json: sleep_records, each_serializer: SleepRecordSerializer
+
+        @pagy, @sleep_records = pagy(sleep_records)
+
+        render json: {
+          sleep_records: @sleep_records,
+          meta: pagination_metadata(@pagy)
+        }, each_serializer: ClockInSerializer
       end
 
       private
